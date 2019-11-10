@@ -9,7 +9,7 @@ import itertools
 # Excercise 1_3_10 construct a 4-universal string...
 
 bases=['0','1',]
-k=3
+k=4
 all_combos=[''.join(p) for p in itertools.product(bases, repeat=k)]
 
 
@@ -21,9 +21,12 @@ in_list=['ATGCG',
 'GGCAC']
 
 ans=Bio.get_relation_graph(all_combos)
+for derp in ans:
+    print(derp)
 adj_mat=Bio.get_adjacency_matrix(all_combos)
-
+print(adj_mat)
 rooms=all_combos
+#rooms=['a','b','c','d','e','f','g','h']
 
 travel_route=[]
 
@@ -36,15 +39,125 @@ history_mat=adj_mat # Matrix that tracks where to go during the alogirthim
 # Start in first room, we know this is the start ( or can be so)
 # will ignore how to find the start for now
 
-travel_route=[rooms[0]]
-
-
-while(len(travel_route)<len(rooms)):
+def get_all_doors(room,rooms,adj_mat):
+    doors=[]
+    # get index of rooms, this will tell you what row of adj_mat to use
+    room_index=rooms.index(room)
+    adj_row=adj_mat[room_index][:]
     
-    # get index of the current room
-    room_index=rooms.index(travel_route[-1])
-    print(room_index)
-    travel_route.append('000')
+    for i,possible_room in enumerate(rooms):
+        if (adj_row[i]==1):
+            doors.append(possible_room)
+            
+    return doors
+
+#input starting room
+travel_route=[rooms[0]]
+current_room=rooms[0]
+current_room_index=rooms.index(current_room)
+
+history_mat=adj_mat.copy()
+
+try_counter=0
+print("rooms are")
+print(rooms)
+break_condition=1
+while(not (len(travel_route)==len(rooms))):
+    try_counter=try_counter+1
+    
+    break_condition=(len(travel_route)==len(rooms)  )
+    print(break_condition)
+   # for i,room in enumerate(rooms):
+   #     c1=not (room in travel_route[:-1])
+    #    c2=not (room==current_room)        
+    #    if(c1 or c2):
+     #       history_mat[i][:]=adj_mat[i][:].copy()  
+    
+    # Now get all doors in this room
+    # returns the name of the acutal room..
+    # if a room is not on the route, reset its history
+
+    travel_route_str=''
+    for route_room in travel_route:
+        travel_route_str=travel_route_str+route_room+','
+    current_room_options_string=''
+    for column in history_mat[current_room_index][:]:
+        current_room_options_string=current_room_options_string+str(int(column))+','    
+    print("in room: "+current_room+" route is: ["+travel_route_str+"]"+" with doors\t\t\t ["+current_room_options_string+"] Nroute: "+str(len(travel_route)) +'and Nrooms:'+str(len(rooms)))
+    
+
+            
+
+    previous_travel_route=travel_route
+    # Now elimate any doors we cant go through
+    doors=get_all_doors(current_room,rooms,history_mat)   
+    for door in doors:
+        door_leads_to_room_already_been=(door in travel_route)
+        never_been_there_before_condition=not (door in travel_route)
+        room_index=rooms.index(door)
+
+
+        
+        if(door_leads_to_room_already_been):
+            # get the index for the room so we can
+            # erase the choice to go here on the next pass
+            history_mat[current_room_index][room_index]=0
+            #print('setting '+str(current_room_index)+","+str(room_index)+' to 0')
+            #print(history_mat[current_room_index][:])
+            #break
+            
+        #door_check=history_mat[current_room_index][room_index].copy()
+        #history_says_ok=(door_check==1)   
+            
+        if(never_been_there_before_condition):
+            current_room=door
+            current_room_index=rooms.index(current_room)
+            travel_route.append(door)
+            #print('ok to go into room '+str(door))
+            break
+     
+    # IF THERE ARE NO MORE POSSIBLE DOORS< GO BACK BRA  
+    if ((sum(history_mat[current_room_index][:])==0) ):
+        # reset history matrix of current room,
+        # remove current room from history matrix
+        # of previous room
+        previous_room=travel_route[-2]
+        previous_room_index=rooms.index(previous_room)
+        # remove the previous rooms door to this room
+        history_mat[previous_room_index][current_room_index]=0
+        # put restore this room...
+        history_mat[current_room_index][:]=adj_mat[current_room_index][:].copy()
+
+        back_route=travel_route[0:-1]
+        travel_route=back_route
+        current_room=previous_room
+        current_room_index=rooms.index(current_room)
+
+
+            ## PRINT CURRENT STATUS
+
+    
+travel_route_str=''
+for route_room in travel_route:
+    travel_route_str=travel_route_str+route_room+','
+current_room_options_string=''
+for column in history_mat[current_room_index][:]:
+    current_room_options_string=current_room_options_string+str(int(column))+','    
+print(" route is: ["+travel_route_str+"]")
+    
+# now combine kmers into a string
+ans_string=Bio.get_string_from_ordered_kmers(travel_route)
+print(ans_string)
+
+            
+            
+            
+            
+    
+            
+        
+    
+   
 
     
 
