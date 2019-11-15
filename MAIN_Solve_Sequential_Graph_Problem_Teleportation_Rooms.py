@@ -9,24 +9,17 @@ import itertools
 # Excercise 1_3_10 construct a 4-universal string...
 
 bases=['0','1',]
-k=4
+k=3
 all_combos=[''.join(p) for p in itertools.product(bases, repeat=k)]
 
-
-in_list=['ATGCG',
-'GCATG',
-'CATGC',
-'AGGCA',
-'GGCAT',
-'GGCAC']
 
 ans=Bio.get_relation_graph(all_combos)
 for derp in ans:
     print(derp)
 adj_mat=Bio.get_adjacency_matrix(all_combos)
-print(adj_mat)
 rooms=all_combos
-#rooms=['a','b','c','d','e','f','g','h']
+# Label rooms with letters but use the relation graph
+rooms=['a','b','c','d','e','f','g','h']
 
 travel_route=[]
 
@@ -59,14 +52,14 @@ current_room_index=rooms.index(current_room)
 history_mat=adj_mat.copy()
 
 try_counter=0
-print("rooms are")
-print(rooms)
+#print("rooms are")
+#print(rooms)
 break_condition=1
 while(not (len(travel_route)==len(rooms))):
     try_counter=try_counter+1
     
     break_condition=(len(travel_route)==len(rooms)  )
-    print(break_condition)
+    #print(break_condition)
    # for i,room in enumerate(rooms):
    #     c1=not (room in travel_route[:-1])
     #    c2=not (room==current_room)        
@@ -83,7 +76,7 @@ while(not (len(travel_route)==len(rooms))):
     current_room_options_string=''
     for column in history_mat[current_room_index][:]:
         current_room_options_string=current_room_options_string+str(int(column))+','    
-    print("in room: "+current_room+" route is: ["+travel_route_str+"]"+" with doors\t\t\t ["+current_room_options_string+"] Nroute: "+str(len(travel_route)) +'and Nrooms:'+str(len(rooms)))
+    #print("in room: "+current_room+" route is: ["+travel_route_str+"]"+" with doors\t\t\t ["+current_room_options_string+"] Nroute: "+str(len(travel_route)) +'and Nrooms:'+str(len(rooms)))
     
 
             
@@ -148,6 +141,8 @@ print(" route is: ["+travel_route_str+"]")
 # now combine kmers into a string
 ans_string=Bio.get_string_from_ordered_kmers(travel_route)
 print(ans_string)
+
+
 
             
             
