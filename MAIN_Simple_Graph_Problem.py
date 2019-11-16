@@ -2,24 +2,51 @@ import pandas as pd
 import numpy as np
 from Bioinformatics import Bioinformatics as Bio
 import matplotlib.pyplot as plt
-import os
 import itertools
 
 
 # Excercise 1_3_10 construct a 4-universal string...
+# Bioinformatics Algorthims by Phillip Compeau and Pavel Pavzner, ch. 3
+
+# This example regards making a 'universal string' 
+# for example 0001110100 is a 3-universal string because it contains all of
+# the 3-base combinations (000, 001, 011, 111, 110, 101, 010, and 100)
 
 bases=['0','1',]
 k=3
 all_combos=[''.join(p) for p in itertools.product(bases, repeat=k)]
 
 
+# First we make a relation graph where each room shows the entrance to other rooms with notation
+# 101 -> 010,011
+# This means 1010 for example is a way where room 101 can lead to room 010
+# Here we have an overlap of 2, this whole example is eventually useful for
+# Bioinformatics, but I will ignore that for now. 
+
 ans=Bio.get_relation_graph(all_combos)
-for derp in ans:
-    print(derp)
+for relation in ans:
+    print(relation)
+    
+# Get the adjacency matrix that shows the relation between elements that are one charecter apart
+# i.e if (000, 001, 011, 111, 110, 101, 010, and 100)=(a,b,c,d,e,f,g,h)
+# Adjacency matrix=
+#   a  b  c  d  e  f  g  h
+# a 0  1  0  0  ect...
+# b
+# c
+# d
+# e
+# f
+# g
+# h 1  1 0  0  0  0  0  0
+    
+    
 adj_mat=Bio.get_adjacency_matrix(all_combos)
-rooms=all_combos
+
+
+
 # Label rooms with letters but use the relation graph
-rooms=['a','b','c','d','e','f','g','h']
+rooms=all_combos
 travel_route=[]
 
 history_mat=adj_mat # Matrix that tracks where to go during the alogirthim
@@ -50,40 +77,17 @@ current_room_index=rooms.index(current_room)
 
 history_mat=adj_mat.copy()
 
-try_counter=0
+try_counter= 0       # Track how many times a route is tried
 #print("rooms are")
 #print(rooms)
 break_condition=1
 while(not (len(travel_route)==len(rooms))):
     try_counter=try_counter+1
-    
-    break_condition=(len(travel_route)==len(rooms)  )
-    #print(break_condition)
-   # for i,room in enumerate(rooms):
-   #     c1=not (room in travel_route[:-1])
-    #    c2=not (room==current_room)        
-    #    if(c1 or c2):
-     #       history_mat[i][:]=adj_mat[i][:].copy()  
-    
-    # Now get all doors in this room
-    # returns the name of the acutal room..
-    # if a room is not on the route, reset its history
-
-    travel_route_str=''
-    for route_room in travel_route:
-        travel_route_str=travel_route_str+route_room+','
-    current_room_options_string=''
-    for column in history_mat[current_room_index][:]:
-        current_room_options_string=current_room_options_string+str(int(column))+','    
-    #print("in room: "+current_room+" route is: ["+travel_route_str+"]"+" with doors\t\t\t ["+current_room_options_string+"] Nroute: "+str(len(travel_route)) +'and Nrooms:'+str(len(rooms)))
-    
-
-            
-
     previous_travel_route=travel_route
-    # Now elimate any doors we cant go through
+    # Now elimate any doors we cant go through, we need to only travel through each element once
     doors=get_all_doors(current_room,rooms,history_mat)   
     for door in doors:
+        # Logic conditions to check
         door_leads_to_room_already_been=(door in travel_route)
         never_been_there_before_condition=not (door in travel_route)
         room_index=rooms.index(door)
@@ -139,7 +143,7 @@ print(" route is: ["+travel_route_str+"]")
     
 # now combine kmers into a string
 ans_string=Bio.get_string_from_ordered_kmers(travel_route)
-print(ans_string)
+print('universal string is '+ ans_string)
 
 
 

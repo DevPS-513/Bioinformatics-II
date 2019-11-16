@@ -1,14 +1,15 @@
 
-# A list of functions usefule for basic Data science
-# in bioinformatics
+# A list of functions used throught the Bionformatics course
+# on courser.org
 class Bioinformatics:
     
        
     # This allows the use of Bioinformatics().HammingDistance(...)
     # So that within a method you can call another method
     # This was done so that a helpful drop down list appears when you type
-    # 'Bioinformactics().'
-    # most IDES will then list all the methods for you,
+    # 'Bioinformactics().' in the IDE i'm using..
+
+
     def __new__(self): 
         return self
     
@@ -29,14 +30,12 @@ class Bioinformatics:
     def get_all_kmers(k:int, DNA_list:list)->list:
         # This function returns all k-mers within a list of DNA strings
         # For example (k=3,DNA_list=['AAATTGACGCAT'])
-        # will return ['AAA', 'AAT', 'ATT', 'TTG', 'TGA', 'GAC', 'ACG', 'CGC', 'GCA', 'CAT']
-        
+        # will return ['AAA', 'AAT', 'ATT', 'TTG', 'TGA', 'GAC', 'ACG', 'CGC', 'GCA', 'CAT']        
         # first if only one string is passed, convert to a list
         if(type(DNA_list)==str):
             DNA_list=[DNA_list]
             
         N_bases=len(DNA_list[0])
-        #print("length of DNA is "+str(N_DNA))
         list_of_mers=[]
         for strand in DNA_list:
             N_mers=N_bases-k+1 # kmers, imagine scanning from start to the last one, only the start of the last scan is included
@@ -45,9 +44,9 @@ class Bioinformatics:
         return list_of_mers
 
     def get_string_from_ordered_kmers(mer_list):
-
-        N_mers=len(mer_list)
-        k=len(mer_list[0])
+        # Assumeing a list is given in sequence
+        # This will stick together each string with only one charecter
+        # that does not overlap. For example [AAA+AAT=AAAT]
         string=''
         for mer in mer_list:
             string=string+mer[0]
@@ -55,23 +54,13 @@ class Bioinformatics:
         string=string+mer_list[-1][1:]
 
         return string
-    
-    
-    def get_string_from_list(items):
-        # Append a string together, and then remove duplicates
-        # this code will first make one long string out of
-    
-            
-
-        
-        return new_string
-
+   
     def get_all_composition_kmers(k: int, DNA_list: list) -> list:
         # This function returns all k-mers within a list of DNA strings
         # For example (k=3,DNA_list=['AAATTGACGCAT'])
         # will return ['AAA', 'AAT', 'ATT', 'TTG', 'TGA', 'GAC', 'ACG', 'CGC', 'GCA', 'CAT']
 
-        # first if only one string is passed, convert to a list
+        # Sometimes only one DNA string is passed in this case convert to a list...
         if (type(DNA_list) == str):
             DNA_list = [DNA_list]
 
