@@ -20,7 +20,6 @@ adj_mat=Bio.get_adjacency_matrix(all_combos)
 rooms=all_combos
 # Label rooms with letters but use the relation graph
 rooms=['a','b','c','d','e','f','g','h']
-
 travel_route=[]
 
 history_mat=adj_mat # Matrix that tracks where to go during the alogirthim
